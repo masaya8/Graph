@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -34,13 +36,27 @@ public class Graph_view extends Frame implements ActionListener,WindowListener{
 		add(button2);
 		DefaultCategoryDataset data = new DefaultCategoryDataset();
 		
-		data.addValue(300, "USA", "2005");
-		data.addValue(500, "USA", "2006");
-		data.addValue(120, "USA", "2007");
-		
-		data.addValue(200, "China", "2005");
-		data.addValue(400, "China", "2006");
-		data.addValue(320, "China", "2007");
+		int id,year,ton;
+		String name;
+		ResultSet rs;
+		MySQL mysql = new MySQL();
+		rs = mysql.selectAll();
+		try {
+			while(rs.next()) {
+				id = rs.getInt("id");
+				name = rs.getString("name");
+				year = rs.getInt("year");
+				ton = rs.getInt("ton");
+				//System.out.println("ID : "+id);
+				//System.out.println("name : "+name);
+				//System.out.println("year : "+year);
+				//System.out.println("ton : "+ton);
+				data.addValue(ton,name,String.valueOf(year));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		addWindowListener(this);
 		setTitle("Graph");
